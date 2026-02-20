@@ -1,0 +1,33 @@
+name: Cache Demo
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Cache dependencies
+      - name: Cache dependencies
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache-demo
+          key: cache-1d9a2cb
+
+      # Step 3: Prime cache (REQUIRED STEP NAME)
+      - name: prime-cache-1d9a2cb
+        run: |
+          echo "Cache hit? ${{ steps.cache-deps.outputs.cache-hit }}"
+
+      # Step 4: Create dummy file (so cache has something)
+      - name: Create cache content
+        run: |
+          mkdir -p ~/.cache-demo
+          echo "hello cache" > ~/.cache-demo/data.txt
